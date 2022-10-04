@@ -1,0 +1,97 @@
+<!DOCTYPE html5>
+<html>
+
+<head>
+    <title>ESA1</title>
+    <style>
+        #x {
+            position: absolute;
+            clip: rect(0px, 640px, 1280px, 0px);
+        }
+    </style>
+</head>
+<body onload=loadImage("Festo2.png")>
+    <p id="text"></p>
+    <img id="x">
+    <script>
+        let text = "R = Rechtsdrehung, L = Linksdrehung, A = Auto. Animation, S = Stop, O = Objekt wechseln";
+        const bildBreite = 640;
+        const bildHöhe = 720;
+        var bildAktuellNr = 1;
+        var interval;
+        var isInAnimation = true;
+        document.getElementById("text").innerHTML = text;
+        function clipSchneiden() {
+            var clipElement = document.getElementById("x");
+            if (bildAktuellNr <= 13) {
+                clipElement.style.clip = "rect(0px, " + (1 + bildAktuellNr) * bildBreite + "px, " + bildHöhe + "px, " + bildAktuellNr * bildBreite + "px)";
+                clipElement.style.left = -bildAktuellNr * bildBreite + "px";
+                bildAktuellNr++;
+            }
+            else {
+                bildAktuellNr = 1;
+                clipElement.style.clip = "rect(0px, " + (1 + bildAktuellNr) * bildBreite + "px, " + bildHöhe + "px, " + bildAktuellNr * bildBreite + "px)";
+                clipElement.style.left = -bildAktuellNr * bildBreite + "px";
+                bildAktuellNr++;
+            }
+        }
+        function clipSchneidenBackwards() {
+            var clipElement = document.getElementById("x");
+            if (bildAktuellNr >= 1) {
+                clipElement.style.clip = "rect(0px, " + (1 + bildAktuellNr) * bildBreite + "px, " + bildHöhe + "px, " + bildAktuellNr * bildBreite + "px)";
+                clipElement.style.left = -bildAktuellNr * bildBreite + "px";
+                bildAktuellNr--;
+            }
+            else {
+                bildAktuellNr = 13;
+                clipElement.style.clip = "rect(0px, " + (1 + bildAktuellNr) * bildBreite + "px, " + bildHöhe + "px, " + bildAktuellNr * bildBreite + "px)";
+                clipElement.style.left = -bildAktuellNr * bildBreite + "px";
+                bildAktuellNr--;
+            }
+        }
+        function loadImage(filename) {
+            var imageObj = new Image();
+            imageObj.onload = function () {
+                var img = document.getElementById('x');
+                img.setAttribute('src', this.src);
+            };
+            imageObj.src = "textures/" + filename;
+        }
+        function autoAnimate() {
+            if (isInAnimation) {
+                interval = window.setInterval(function () {
+                    clipSchneiden();
+                }, 250);
+                isInAnimation = false;
+            }
+            else {
+                clearInterval(interval);
+                isInAnimation = true;
+            }
+        }
+        window.onkeydown = function (evt) {
+            // console.log(evt);
+            var key = evt.which ? evt.which : evt.keyCode;
+            var c = String.fromCharCode(key);
+            switch (c) {
+                case ('R'):
+                    clipSchneiden();
+                    break;
+                case ('L'):
+                    clipSchneidenBackwards();
+                    break;
+                case ('A'):
+                    autoAnimate();
+                    break;
+                case ('S'):
+                    clearInterval(interval);
+                default:
+                    break;
+                case ('O'):
+                    window.location.href = "ESA1peter.html";
+                    break;
+            }
+        }; 
+    </script>
+</body>
+</html>
